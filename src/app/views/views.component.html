@@ -1,0 +1,38 @@
+<div class="views-container">
+    <ngx-ui-loader [loaderId]="'loader-booster'" [fgsType]="spinner" [text]="'Abrindo os Boosters'"></ngx-ui-loader>
+
+
+
+    <div class="d-flex flex-row justify-content-center flex-wrap">
+
+        <div class="col-5">
+            <input class="form-control" placeholder="Pesquisar personagem" [(ngModel)]="searchText"
+                [typeahead]="listChars" (keyup)="onSearch()" [optionsListTemplate]="customListTemplate"
+                typeaheadOptionField="Name" [typeaheadMinLength]="0" [typeaheadHideResultsOnBlur]="false" (typeaheadLoading)="isLoading"
+                [typeaheadWaitMs]="500" [isAnimated]="true">
+
+
+            <ng-template #customListTemplate let-matches="listChars" let-query="query" let-typeaheadTemplateMethods
+                [ngSwitch]="listChars.length > 0">
+                <ul class="custom-list-group">
+                    <li class="custom-list-group-item" *ngFor="let char of listChars; let idx=index" 
+                    [class.active]="typeaheadTemplateMethods.isActive(char)"
+                    (click)="typeaheadTemplateMethods.selectMatch(char, $event)"
+                    (mouseenter)="typeaheadTemplateMethods.selectActive(char)">
+                        <div class="char-card">
+                            <img [src]="char.Image" [alt]="char.Name">
+                        </div>
+                        <h5>
+                            {{char.Name}}
+                        </h5>
+                    </li>
+                </ul>
+                <h4 class="text-dark-emphasis" *ngSwitchCase="false"> Carregando</h4>
+            </ng-template>
+        </div>
+        <div class="col-10">
+            <h5>{{listChars.length}}</h5>
+        </div>
+    </div>
+
+</div>
