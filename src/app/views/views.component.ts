@@ -28,8 +28,7 @@ export class ViewsComponent {
       Name: ""
     };
 
-  public listChars: Character[] = new Array<Character>();
-  public listCharacters$?: Observable<Character[]>;
+  public listChars: Array<Character>;
   isLoading?: boolean = true;
 
   public currentStep: number = 0;
@@ -38,7 +37,16 @@ export class ViewsComponent {
     this.spinner = SPINNER.cubeGrid;
   }
 
-  ngOnInit(): void { /*
+  ngOnInit(): void {
+    this.listChars = new Array<Character>();
+
+    setTimeout(() => {
+      this.searchText = "aliens"
+      this.onSearch();
+
+    }, 500);
+
+    /*
       let self = this;
       self.isLoading = true;
       this.listCharacters$ = new Observable((observer: Observer<string | undefined>) => {
@@ -88,24 +96,24 @@ export class ViewsComponent {
     let self = this;
     let res = this.apirequestService.Fetch("/?name=" + this.searchText, this.methods.Get)
       .pipe(
-        debounceTime(200),
-        last(r => {
-          self.listChars = [];
-          return true
-        }),
+        debounceTime(1000),
+        last(),
         switchMap((data: any) => {
-          debugger
-          let list = data.results.map((r: any) => {
+          if (data?.error) {
+            return of([]);
+          }
+          let list = data?.results?.map((r: any) => {
             return new Character(r);
           });
-          self.listChars = [...list];
-          return of([]);
+
+          return of([...list]);
         })
       );
-    res.subscribe(r => {
-      //  self.listChars = [];
+    res.subscribe(result => {
+      self.listChars = [...result];
     })
   }
+
   changeTypeaheadLoading(e: boolean): void {
     this.isLoading = e;
   }
