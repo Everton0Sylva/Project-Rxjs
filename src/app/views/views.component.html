@@ -12,10 +12,13 @@
                 [typeaheadHideResultsOnBlur]="false" [typeaheadWaitMs]="200" [typeaheadMinLength]="0"
                 [isAnimated]="true" [typeaheadOptionsLimit]="20">
 
+            <h5 *ngIf="listChars.length == 0" class="text-danger mt-1 ms-1">
+             Nenhum resultado encontrado!!
+            </h5>
 
-            <ng-template #customListTemplate let-matches="listChars" let-query="query" let-typeaheadTemplateMethods
-                [ngSwitch]="listChars.length > 0">
-                <ul class="custom-list-group" *ngSwitchDefault>
+
+            <ng-template #customListTemplate let-matches="listChars" let-query="query" let-typeaheadTemplateMethods>
+                <ul class="custom-list-group">
                     <li class="custom-list-group-item" *ngFor="let char of listChars"
                         [class.active]="typeaheadTemplateMethods.isActive(char)"
                         (click)="typeaheadTemplateMethods.selectMatch(char, $event)"
@@ -28,7 +31,6 @@
                         </h5>
                     </li>
                 </ul>
-                <h4 class="text-dark-emphasis" *ngSwitchCase="false"> Carregando</h4>
             </ng-template>
         </div>
     </div>

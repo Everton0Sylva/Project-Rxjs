@@ -37,40 +37,39 @@ export class ViewsComponent {
     this.spinner = SPINNER.cubeGrid;
   }
 
+
   ngOnInit(): void {
-    this.listChars = new Array<Character>();
-
-    setTimeout(() => {
-      this.searchText = "aliens"
-      this.onSearch();
-
-    }, 500);
-
-    /*
-      let self = this;
-      self.isLoading = true;
-      this.listCharacters$ = new Observable((observer: Observer<string | undefined>) => {
-        observer.next(this.searchText.toLowerCase());
-      }).pipe(
-        debounceTime(500),
-        switchMap((search: string) => {
-          let res = this.apirequestService.Fetch("/?name=" + this.searchText, this.methods.Get)
-            .pipe(
-              last(),
-              map((data: any) => {
-                let list = data.results.map((r: any) => {
-                  return new Character(r);
-                });
-                self.listChars = [...list];
-                return [];
-              })
-            );
-          res.subscribe(r => {
-            debugger
+    /*  setTimeout(() => {
+        this.searchText = "aliens"
+        this.onSearch();
+  
+      }, 500);
+  
+      
+        let self = this;
+        self.isLoading = true;
+        this.listCharacters$ = new Observable((observer: Observer<string | undefined>) => {
+          observer.next(this.searchText.toLowerCase());
+        }).pipe(
+          debounceTime(500),
+          switchMap((search: string) => {
+            let res = this.apirequestService.Fetch("/?name=" + this.searchText, this.methods.Get)
+              .pipe(
+                last(),
+                map((data: any) => {
+                  let list = data.results.map((r: any) => {
+                    return new Character(r);
+                  });
+                  self.listChars = [...list];
+                  return [];
+                })
+              );
+            res.subscribe(r => {
+              debugger
+            })
+            return self.listChars;
           })
-          return self.listChars;
-        })
-      );*/
+        );*/
   }
 
   /*
@@ -99,14 +98,15 @@ export class ViewsComponent {
         debounceTime(1000),
         last(),
         switchMap((data: any) => {
-          if (data?.error) {
-            return of([]);
-          }
-          let list = data?.results?.map((r: any) => {
-            return new Character(r);
-          });
+          if (data?.results) {
+            let list = data?.results?.map((r: any) => {
+              return new Character(r);
+            });
 
-          return of([...list]);
+            return of([...list]);
+          }
+          return of(new Array<Character>());
+
         })
       );
     res.subscribe(result => {
@@ -117,7 +117,12 @@ export class ViewsComponent {
   changeTypeaheadLoading(e: boolean): void {
     this.isLoading = e;
   }
+
+
   /*
+
+
+      console.log(this.listChars.length)
     onSelectBooster(boost: Booster) {
       this.listCards = new Array<Card>();
       this.ngxUiLoaderService.startLoader("loader-booster");
